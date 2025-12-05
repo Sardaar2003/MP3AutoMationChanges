@@ -5,8 +5,6 @@ from tkinter import filedialog, messagebox
 import subprocess
 from datetime import datetime, timedelta
 import sys
-from pathlib import Path
-import hashlib
 
 class MP3Processor:
     def __init__(self, root):
@@ -15,26 +13,14 @@ class MP3Processor:
         self.root.geometry("700x600")
         
         # Version and update settings
-        self.app_version = "1.0"
-        self.version_url = "https://your-website.com/version.json"  # Update this URL
-        self.embedded_password = "MP3@Secure#2023!v1"  # Change this for each version
+        self.app_version = "2.0.0"
+        self.version_url = "https://raw.githubusercontent.com/Sardaar2003/MP3AutoMationChanges/main/version.json"
+        self.embedded_password = "MP3@Secure#2023!v1"  # This will be replaced during build
         
         # Configuration
         self.config_file = "mp3_config.json"
         self.password_info = self.initialize_password()
         
-        # Check for updates
-        self.check_for_updates()
-        
-        # Check password expiry
-        if self.is_password_expired():
-            messagebox.showerror(
-                "Version Expired",
-                "This version has expired. Please download the latest version."
-            )
-            self.root.after(1000, self.root.quit)
-            return
-            
         # Setup UI
         self.setup_ui()
         
@@ -94,33 +80,6 @@ class MP3Processor:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
         self.status.config(yscrollcommand=scrollbar.set)
         scrollbar.config(command=self.status.yview)
-        
-        # Show password expiry info
-        expiry_date = datetime.strptime(self.password_info['expiry_date'], '%Y-%m-%d').date()
-        days_left = (expiry_date - datetime.now().date()).days
-        self.status.insert(tk.END, f"Password expires in: {days_left} days\n")
-        self.status.see(tk.END)
-
-    def check_for_updates(self):
-        try:
-            import requests
-            from packaging import version
-            
-            response = requests.get(self.version_url, timeout=5)
-            if response.status_code == 200:
-                data = response.json()
-                latest_version = data.get('latest_version', self.app_version)
-                
-                if version.parse(self.app_version) < version.parse(latest_version):
-                    download_url = data.get('download_url', '')
-                    messagebox.showinfo(
-                        "Update Available",
-                        f"Version {latest_version} is available.\n\n"
-                        f"Please download the latest version to continue."
-                    )
-                    self.root.after(1000, self.root.quit)
-        except Exception as e:
-            print(f"Version check failed: {e}")  # Silently fail if can't check
 
     def browse_folder(self, path_var):
         folder = filedialog.askdirectory()
@@ -128,7 +87,6 @@ class MP3Processor:
             path_var.set(folder)
     
     def initialize_password(self):
-        # Default config
         expiry_date = (datetime.now() + timedelta(days=15)).strftime('%Y-%m-%d')
         default_config = {
             'password': self.embedded_password,
@@ -136,18 +94,15 @@ class MP3Processor:
             'version': self.app_version
         }
         
-        # Load existing config or create new
         if os.path.exists(self.config_file):
             try:
                 with open(self.config_file, 'r') as f:
                     config = json.load(f)
-                    # Only use existing config if it's for this version
                     if config.get('version') == self.app_version:
                         return config
             except:
                 pass
                 
-        # Save new config
         with open(self.config_file, 'w') as f:
             json.dump(default_config, f, indent=4)
             

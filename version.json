@@ -1,6 +1,6 @@
 {
-    "latest_version": "1.0",
-    "download_url": "https://your-website.com/download/MP3_Processor_v1.0.exe",
+    "latest_version": "2.0.0",
+    "download_url": "https://github.com/Sardaar2003/MP3AutoMationChanges/releases/download/v2.0.0/MP3_Processor_v1.0.exe",
     "release_date": "2023-12-05",
-    "password_hash": "a1b2c3d4e5f6..."
+    "password_hash": "new_hashed_password_here"
 }
