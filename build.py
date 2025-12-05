@@ -10,19 +10,21 @@ with open("mp3_processor.py", "r", encoding='utf-8') as f:
 
 # Replace the password
 content = content.replace(
-    'self.embedded_password = "MP3@Secure#2023!v1"',  # This must match exactly
+    'self.embedded_password = "MP3@Secure#2023!v1"',  # Must match exactly
     f'self.embedded_password = "{password}"'
 )
 
 with open("mp3_processor_temp.py", "w", encoding='utf-8') as f:
     f.write(content)
 
-# Build with PyInstaller
+# Build with PyInstaller (FIX: Added hidden imports)
 pyi.run([
     "mp3_processor_temp.py",
     "--onefile",
     "--windowed",
-    "--name=MP3_Processor_v1.0"
+    "--name=MP3_Processor_v1.0",
+    "--hidden-import=encodings",
+    "--hidden-import=encodings.aliases"
 ])
 
 # Clean up

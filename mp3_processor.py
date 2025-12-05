@@ -13,7 +13,7 @@ class MP3Processor:
         self.root.geometry("700x600")
         
         # Version and update settings
-        self.app_version = "2.0.0"
+        self.app_version = "3.0.0"
         self.version_url = "https://raw.githubusercontent.com/Sardaar2003/MP3AutoMationChanges/main/version.json"
         self.embedded_password = "MP3@Secure#2023!v1"  # This will be replaced during build
         
